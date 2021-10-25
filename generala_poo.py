@@ -25,7 +25,8 @@ def calcular_repetidos(dados):
     return repetidos
 
 
-def buscar_repetido(dados, repetidos, cantidad_repetidos, estricto=False):
+
+def buscar_repetido(dados, repetidos, cantidad_repetidos): #dados, cantidad de repetidos por numeros, cantidad que quiero
     encontre = False
     for repetido in repetidos:
         if repetido >= cantidad_repetidos:
@@ -42,12 +43,21 @@ def calcular_puntos(numero_lanzamiento, dados, juego):
             if numero_lanzamiento == 1:
                 puntos += 5
 
+
     elif juego == "full":
-        repetidos = calcular_repetidos(dados)
-        if buscar_repetido(dados, repetidos, 3) and buscar_repetido(dados, repetidos, 2):
+        encontre1 = False
+        encontre2 = False
+        for i in calcular_repetidos(dados):
+            if i == 3:
+                encontre1 = True
+            if i == 2:
+                encontre2 = True
+
+        if encontre1 and encontre2:
             puntos = 30
             if numero_lanzamiento == 1:
                 puntos += 5
+
 
     elif juego == "poker":
         repetidos = calcular_repetidos(dados)
@@ -63,16 +73,12 @@ def calcular_puntos(numero_lanzamiento, dados, juego):
             if numero_lanzamiento == 1:
                 raise Ganaste("Ganaste con Generala servida!!!  ")
 
-
-
     elif juego == "generala_doble":
         repetidos = calcular_repetidos(dados)
         if buscar_repetido(dados, repetidos, 5):
             puntos = 100
             if numero_lanzamiento == 1:
                 raise Ganaste("Ganaste con Generala doble servida!!! Increible!!!")
-
-
 
     elif juego == "1" or juego == "2" or juego == "3" or juego == "4" or juego == "5" or juego == "6":
         for dado in dados:
@@ -133,18 +139,6 @@ class TablaPuntos:
         self.cantidad_jugadores = cantidad_jugadores
         self._tabla = [  # lista/jugador
             {  # diccionario/jugada
-                # '1': 1,
-                # '2': 2,
-                # '3': 3,
-                # '4': 4,
-                # '5': 5,
-                # '6': None,
-                # 'escalera': 1,
-                # 'full': 2,
-                # 'poker': 2,
-                # 'generala': 2,
-                # 'generala_doble': 2,
-
                 "1": None,
                 '2': None,
                 '3': None,
@@ -191,6 +185,7 @@ class TablaPuntos:
                 self._tabla[jugador][jugada] = puntos
             else:
                 raise TablaPuntosError("No tenes la generala simple")
+                
     
         elif self._tabla[jugador][jugada] is None: # anotar
             puntos = calcular_puntos(numero_lanzamiento, dados, jugada)
@@ -228,7 +223,7 @@ class Generala:
 
             estado, self.puntos = self.tabla_puntos.estado_tabla
             
-            if estado: # Aca recibe los puntos o algo parecido de la 137
+            if estado: # Aca recibe los puntos
                 self.esta_jugado = False
                 maximo = max(self.puntos)
 

@@ -186,7 +186,7 @@ class TablaPuntosTest(unittest.TestCase): #24
 
     def test_jugada_full_bien(self):
         tabla = TablaPuntos(2)  
-        tabla.anotar(0, "full", 2, [1, 1, 2, 1, 5])
+        tabla.anotar(0, "full", 2, [1, 1, 5, 1, 5])
         self.assertEqual(tabla._tabla[0]["full"], 30)
  
     def test_jugada_full_servida(self):
@@ -388,6 +388,13 @@ class CalcularPuntosTest(unittest.TestCase): #30
         numero_lanzamiento = 2
         puntos = calcular_puntos(numero_lanzamiento, dados, "full")
         self.assertEqual(puntos, 0)
+
+    def test_calcular_puntos_full_puntos_0_2(self):
+        dados = [3, 3, 3, 2, 6]
+        numero_lanzamiento = 2
+        puntos = calcular_puntos(numero_lanzamiento, dados, "full")
+        self.assertEqual(puntos, 0)
+
 
     def test_calcular_puntos_full_puntos_30(self):
         dados = [3, 3, 6, 6, 6]
