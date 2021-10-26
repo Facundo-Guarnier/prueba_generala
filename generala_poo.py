@@ -71,14 +71,14 @@ def calcular_puntos(numero_lanzamiento, dados, juego):
         if buscar_repetido(dados, repetidos, 5):
             puntos = 50
             if numero_lanzamiento == 1:
-                raise Ganaste("Ganaste con Generala servida!!!  ")
+                raise Ganaste("|+++++++{:^24}+++++++|".format("Ganaste con Generala servida!!!  "))
 
     elif juego == "generala_doble":
         repetidos = calcular_repetidos(dados)
         if buscar_repetido(dados, repetidos, 5):
             puntos = 100
             if numero_lanzamiento == 1:
-                raise Ganaste("Ganaste con Generala doble servida!!! Increible!!!")
+                raise Ganaste("|+++++++{:^24}+++++++|".format("Ganaste con Generala doble servida!!! Increible!!!"))
 
     elif juego == "1" or juego == "2" or juego == "3" or juego == "4" or juego == "5" or juego == "6":
         for dado in dados:
@@ -124,7 +124,7 @@ class Turno:
 
     def siguiente_turno(self):
         if(self.numero_lanzamiento >= 3):
-            raise TurnoError("Límite de lanzamientos alcanzado")
+            raise TurnoError("|+++++++{:^24}+++++++|".format("Límite de lanzamientos alcanzado"))
 
         self.numero_lanzamiento += 1
         self.dados_lanzados = Dados(5 - self.dados_seguir.cantidad)
@@ -181,13 +181,26 @@ class TablaPuntos:
 
         if jugada == "generala_doble" and self._tabla[jugador]["generala"] is None:     # para anotar la generala doble
             puntos = calcular_puntos(numero_lanzamiento, dados, "generala")
-            if puntos == 0:
+
+            if puntos == 0:    # Cuando quiero tachar
                 self._tabla[jugador][jugada] = puntos
-            else:
-                raise TablaPuntosError("No tenes la generala simple")
+
+            else:        # Evitar anotar 100 en doble sin la simple 
+                raise TablaPuntosError("|+++++++{:^24}+++++++|".format("No tenes la generala simple"))
+
+
+        elif jugada == "generala" and self._tabla[jugador]["generala_doble"] is None:
+            puntos = calcular_puntos(numero_lanzamiento, dados, "generala")
+
+            if puntos == 0:      # No tachar la simple sin tener tachada la doble
+                raise TablaPuntosError("|+++++++{:^24}+++++++|".format("No podes tachar la simple sin tachar la doble!!"))
+
+            else:     # Anotar la simple
+                self._tabla[jugador][jugada] = puntos
+
                 
     
-        elif self._tabla[jugador][jugada] is None: # anotar
+        elif self._tabla[jugador][jugada] is None:    # Anotar
             puntos = calcular_puntos(numero_lanzamiento, dados, jugada)
             self._tabla[jugador][jugada] = puntos
         else:
@@ -264,9 +277,9 @@ class Generala:
 
 
 def imprimir_tabla(tabla, jugador=None): # juego.tabla_puntos._tabla; False=imprimir a todos los jugadores
-    tabla_limpia = ["", "", "", "", "", "", "", "", "" , "", ""]
-    jugadores=""
-    n=0
+    tabla_limpia = [""] * 11
+    jugadores = ""
+    n = 0
 
     if jugador is None: # Todos los jugadores
         
@@ -294,7 +307,7 @@ def imprimir_tabla(tabla, jugador=None): # juego.tabla_puntos._tabla; False=impr
 def imprimir_dados(lista_dados):
     dados=""
     for i in lista_dados:
-        dados+= str(i) + " "
+        dados += str(i) + " "
     return dados
 
 

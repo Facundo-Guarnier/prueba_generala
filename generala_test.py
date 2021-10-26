@@ -213,8 +213,9 @@ class TablaPuntosTest(unittest.TestCase): #24
     # generala
     def test_jugada_generala_mal(self):
         tabla = TablaPuntos(2)  
-        tabla.anotar(0, "generala", 2, [1, 1, 2, 1, 1])
-        self.assertEqual(tabla._tabla[0]["generala"], 0)
+        with self.assertRaises(TablaPuntosError):
+            tabla.anotar(0, "generala", 2, [1, 1, 2, 1, 1])
+        self.assertEqual(tabla._tabla[0]["generala"], None)
 
     def test_jugada_generala_bien(self):
         tabla = TablaPuntos(2)  
@@ -226,6 +227,15 @@ class TablaPuntosTest(unittest.TestCase): #24
         with self.assertRaises(Ganaste):
             tabla.anotar(0, "generala", 1, [1, 1, 1, 1, 1])
         self.assertEqual(tabla._tabla[0]["generala"], None) # ganar de una
+    
+    
+    def test_tachar_general(self):
+        tabla = TablaPuntos(2)
+        tabla.anotar(0, "generala_doble", 1, [4, 1, 1, 5, 1]) 
+        self.assertEqual(tabla._tabla[0]["generala_doble"], 0)
+        tabla.anotar(0, "generala", 1, [4, 1, 1, 5, 1])
+        self.assertEqual(tabla._tabla[0]["generala"], 0)
+
 
     # generala doble
     def test_jugada_generala_doble_mal(self):
