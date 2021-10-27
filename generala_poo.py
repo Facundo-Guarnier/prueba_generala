@@ -71,21 +71,22 @@ def calcular_puntos(numero_lanzamiento, dados, juego):
         if buscar_repetido(dados, repetidos, 5):
             puntos = 50
             if numero_lanzamiento == 1:
-                raise Ganaste("|+++++++{:^24}+++++++|".format("Ganaste con Generala servida!!!  "))
+                raise Ganaste(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format("Ganaste con Generala servida!!!"))
 
     elif juego == "generala_doble":
         repetidos = calcular_repetidos(dados)
         if buscar_repetido(dados, repetidos, 5):
             puntos = 100
             if numero_lanzamiento == 1:
-                raise Ganaste("|+++++++{:^24}+++++++|".format("Ganaste con Generala doble servida!!! Increible!!!"))
+                raise Ganaste(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format("Ganaste con Generala doble servida!!! Increible!!!"))
 
     elif juego == "1" or juego == "2" or juego == "3" or juego == "4" or juego == "5" or juego == "6":
         for dado in dados:
             if juego == str(dado):
                 puntos += dado
     else:
-        raise ErrorInputs("|+++++++{:^24}+++++++|".format("Jugada NO valida"))
+        raise ErrorInputs(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format("Jugada NO valida"))
+
     return puntos
 
 
@@ -124,7 +125,7 @@ class Turno:
 
     def siguiente_turno(self):
         if(self.numero_lanzamiento >= 3):
-            raise TurnoError("|+++++++{:^24}+++++++|".format("Límite de lanzamientos alcanzado"))
+            raise TurnoError(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format("Límite de lanzamientos alcanzado"))
 
         self.numero_lanzamiento += 1
         self.dados_lanzados = Dados(5 - self.dados_seguir.cantidad)
@@ -176,7 +177,7 @@ class TablaPuntos:
             ]
 
         if not(jugada in jugadas_posibles):
-            raise ErrorInputs("|+++++++{:^24}+++++++|".format("Jugada NO valida"))
+            raise ErrorInputs(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format("Jugada NO valida"))
 
 
         if jugada == "generala_doble" and self._tabla[jugador]["generala"] is None:     # para anotar la generala doble
@@ -186,14 +187,14 @@ class TablaPuntos:
                 self._tabla[jugador][jugada] = puntos
 
             else:        # Evitar anotar 100 en doble sin la simple 
-                raise TablaPuntosError("|+++++++{:^24}+++++++|".format("No tenes la generala simple"))
+                raise TablaPuntosError(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format("No tenes la generala simple"))
 
 
         elif jugada == "generala" and self._tabla[jugador]["generala_doble"] is None:
             puntos = calcular_puntos(numero_lanzamiento, dados, "generala")
 
             if puntos == 0:      # No tachar la simple sin tener tachada la doble
-                raise TablaPuntosError("|+++++++{:^24}+++++++|".format("No podes tachar la simple sin tachar la doble!!"))
+                raise TablaPuntosError(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format("No podes tachar la simple sin tachar la doble!!"))
 
             else:     # Anotar la simple
                 self._tabla[jugador][jugada] = puntos
@@ -204,7 +205,7 @@ class TablaPuntos:
             puntos = calcular_puntos(numero_lanzamiento, dados, jugada)
             self._tabla[jugador][jugada] = puntos
         else:
-            raise TablaPuntosError("|+++++++{:^24}+++++++|".format('Jugada ya anotada!'))
+            raise TablaPuntosError(("\n\n+" + "-"*66 + "+\n|{:^66}|\n" + "+" + "-"*66 + "+\n").format('Jugada ya anotada!'))
 
 
 class Generala:
@@ -338,10 +339,9 @@ def main():
                 print("Tiro: {}".format(juego.turno_actual.numero_lanzamiento))
                 print("Indices:     1 2 3 4 5")
                 print("Valores:    ", imprimir_dados(juego.turno_actual.dados_finales))
-                print(juego.anotar(input('¿Que jugada quiere anotar?')))
+                print(juego.anotar(input("¿Que jugada quiere anotar? ")))
                 print(imprimir_tabla(juego.tabla_puntos._tabla))
 
-            print(imprimir_tabla(juego.tabla_puntos._tabla))
             print(imprimir_puntos(juego.puntos))
             exit()
 
